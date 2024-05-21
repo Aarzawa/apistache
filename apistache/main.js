@@ -6,10 +6,10 @@ kaboom({
   width: 1280,
   height: 720,
   letterbox: true,
-  //debug: false,
+  debug: false,
   });
 
-loadSound("ost", "../Musique/apistache_ost2.mp3")
+loadSound("ost", "./Musique/apistache_ost2.mp3")
 loadRoot("sprites/")
 loadSprite("taureau", "spritesheetTaureau1-min2.png", {
     sliceX: 8,
@@ -45,18 +45,7 @@ loadSprite("grass", "Grass.png")
 loadSprite("palmtree-big","PalmTree1.png")
 loadSprite("palmtree-small", "PalmTree2.png")
 loadSprite("sphinx", "LionSphinx.png")
-/*loadSpriteAtlas(
-  "egypt_tomb_v1.1.png", {
-    "block-1": {
-      x: 0,
-      y: 0,
-      width: 96,
-      heigth: 64,
-    }
-  }
-)*/
 loadSprite("block-1", "block-1.png")
-//loadSprite("philae2", "./architecture/PHILAE2.png")
 loadSprite("poils", "poils.png")
 loadSprite("triangle", "triangle.png")
 loadSprite("faucon", "faucon.png")
@@ -83,7 +72,7 @@ const LEVELS = [
     "|                                                                              c                                                         |",
     "|                                                                                                      *                                 |",
     "|                                                                              P                       C                                 |",
-    "|                                                                        p    CC     V1         T                                        |",
+    "|                                                                        p    CC     V1                                                  |",
     "|                                                                        c           CCCC      ccc                                       |",
     "|                                                                   c                                                                    |",
     "|                                                                 c                                                                      |",
@@ -95,7 +84,7 @@ const LEVELS = [
     "|                         =====                                                   ===                                                    |",
     "|        C           C                                                                 p                                                 |",
     "|                                                                                      CC      c      c                                   |",
-    "|   V p      PV 1c    2    V VP   c 2   P    2    V  Y                                                      P                            |",
+    "| T V p      PV 1c    2    V VP   c 2   P    2    V  Y                                                      P                            |",
     "|======================================================                                                   CCCCC                          |",
     "|                                                      =V                                                           c                    |",
     "|                                                       =V                                                                 c             |",
@@ -115,7 +104,7 @@ const LEVELS = [
   [
     "|                                                                                                                                        |",
     "|                                                                                                                                        |",
-    "|      Pp                                                                                                                                |",
+    "|  T   Pp                                                                                                                                |",
     "|==========                                                                                                                    P    Pp   |",
     "|          =                                                                                                            P  B  CCCCCCCCCCC|",
     "|           =V                                                                                                       CCCCCCCCC           |",
@@ -142,7 +131,7 @@ const LEVELS = [
     "|                                                                                                                                        |",
     "|                                         CCC                                                                                            |",
     "|                                       C                                                                                                |",
-    "|                    B T  ^ V2 PPp    C                                                                                                  |",
+    "|                    B    ^ V2 PPp    C                                                                                                  |",
     "|                  =================                                                                                                     |",
     "|                                                                                                                                        |",
     "|                                                                                                                                        |",
@@ -167,7 +156,7 @@ const LEVELS = [
     "|                                                                                        2                                               |",    "|                                                                                                                                        |",
     "|                                                                                       CCC                                              |",
     "|                                                                cp1 c                                                                   |",
-    "|     V      c             Pc                   C   P         V  =====             VY                               p   2     P B T  Y & |",
+    "|T    V      c             Pc                   C   P         V  =====             VY                               p   2     P B    Y & |",
     "|=   ===                  ===       c  c  c         C       ===                    ===             c    c    c    =======================|",
     "|                    c                                                     P B               c                                           |",
     "|                                                                          =====                                                         |",
@@ -243,14 +232,6 @@ scene("game", ({levelIdx}) => {
   })
 
 
-	/*const scoreLabel = add([
-		text(WIN_SCORE, {font: "courier new", size: 32}),
-    color(0, 0, 0),
-		anchor("center"),
-		pos(width() - 80, 80),
-		fixed(),
-		z(100),
-	])*/
   const levelLabel = add([
 		text(`Niveau ${LEVEL_IDX + 1}`, {font: "courier new", size: 32}),
     color(0, 0, 0),
@@ -304,17 +285,12 @@ scene("game", ({levelIdx}) => {
   })
 
   //ENNEMIS  
-  /*onCollide("enemy", "obstacle", () => {
-    enemy.jump()
-  })*/
   
   function patrol(time, additionalTime) {
     return {
       id: "patrol",
       require: ["pos", "area"],
-      //startingPos: vec2(0, 0),
       add() {
-        //debug.log(this.pos.y)
         this.onStateEnter("idle", async () => {
           let timer = rand(time)
           this.play("idle")
@@ -344,10 +320,7 @@ scene("game", ({levelIdx}) => {
               this.move(ENEMYSPEED, 0)
             }
         })
-        //this.play("walk")
         this.onCollide("death", () => {
-          //debug.log(this.startingPos)
-          //this.pos = this.startingPos
           destroy(this)
         })
       },
@@ -371,17 +344,8 @@ scene("game", ({levelIdx}) => {
   player.onCollide("attribute", (attribute) => {
     destroy(attribute)
 
-    /*add([
-      sprite(attribute.sprite),
-      anchor("center"),
-      pos(width() - 80*WIN_SCORE, 80),
-      fixed(),
-      z(100)
-
-    ])*/
     WIN_SCORE += 1
     LEVEL_IDX += 1
-    //scoreLabel.text = WIN_SCORE
     if (WIN_SCORE === 3) {
       go("end")
     }
@@ -429,7 +393,7 @@ scene("start", () => {
     ["Vous êtes un taureau et souhaitez poursuivre votre vie dans les meilleures conditions qui soient pour vous :"],
     ["Vous souhaitez devenir un taureau Apis, incarnation terrestre du dieu Ptah !"],
     ["Vous pourriez ainsi terminer votre vie dans les plus grands honneurs, aux soins des prêtres..."],
-    ["Pour cela, il vous faut récupérer les attributs caractéristiques des taureaux Apis : \n- les poils noirs \n- le triangle blanc sur le front\n- la marque de faucon sur le dos \n- la marque de scarabé sous la langue"],
+    ["Pour cela, il vous faut récupérer les attributs caractéristiques des taureaux Apis : \n- les poils noirs \n- le triangle blanc sur le front\n- la marque de faucon sur le dos"],
     ["Avant d'avoir réuni ces attributs, ne vous faites pas attraper par les prêtres !"]
   ]
   let curDialog = 0
@@ -510,7 +474,6 @@ scene("lose", () => {
         levelIdx: LEVEL_IDX,
       })
   })
-  //addButton("Rejouer", endMenu.pos.x, endMenu.pos.y + 170, () => go("game", {levelIdx: 0}))
 })
 
 scene("level-start", ({levelIdx}) => {
@@ -540,87 +503,6 @@ scene("level-start", ({levelIdx}) => {
       })
   })
 })
-/*
-function patrol(distance = 500, speed = 50, dir = 1) {
-  return {
-    id: "patrol",
-    require: ["pos", "area"],
-    startingPos: vec2(0, 0),
-    add() {
-      this.startingPos = this.pos;
-      this.on("collide", (obj, side) => {
-        if (side === "left" || side === "right") {
-          dir = -dir;
-        }
-      });
-    },
-    update() {
-      if (Math.abs(this.pos.x - this.startingPos.x) >= distance) {
-        dir = -dir;
-      }
-      this.move(speed * dir, 0);
-    },
-  };
-}
-function enemy() {
-  return {
-    id: "enemy",
-    require: ["pos", "area", "sprite", "patrol"],
-    isAlive: true,
-    update() {},
-    squash() {
-      this.isAlive = false;
-      this.unuse("patrol");
-      this.stop();
-      this.frame = 2;
-      this.area.width = 16;
-      this.area.height = 8;
-      this.use(lifespan(0.5, { fade: 0.1 }));
-    },
-  };
-}*/
-
-function addButton(txt, px, py, f) {
-
-	// add a parent background object
-	const btn = add([
-		rect(200, 60, { radius: 8 }),
-    opacity(0.2),
-		pos(px, py),
-		area(),
-		scale(1),
-		anchor("center"),
-		outline(4),
-	])
-
-	// add a child object that displays the text
-	btn.add([
-		text(txt, { font: "courier new", size: 32} ),
-		anchor("center"),
-		color(0, 0, 0),
-	])
-
-	// onHoverUpdate() comes from area() component
-	// it runs every frame when the object is being hovered
-	btn.onHoverUpdate(() => {
-		btn.scale = vec2(1.2)
-		setCursor("pointer")
-	})
-
-	// onHoverEnd() comes from area() component
-	// it runs once when the object stopped being hovered
-	btn.onHoverEnd(() => {
-		btn.scale = vec2(1)
-		btn.color = rgb()
-	})
-
-	// onClick() comes from area() component
-	// it runs once when the object is clicked
-	btn.onClick(f)
-
-	return btn
-
-}
 
 function start() {
   go("start")

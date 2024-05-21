@@ -14,3 +14,4 @@ Apistache a été développé en javascript, à l'aide de la libraire Kaboom.js 
 
 ## Lancement
 
+Le jeu tourne bien sur l'extension LiveServer.
