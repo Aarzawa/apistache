@@ -8,6 +8,26 @@ Apistache est un jeu vidéo 2D à visée de médiation scientifique. Ce projet a
 
 ![Capture d'écran du premier niveau](apistache_screenshot.png)
 
+### Commandes
+
+Les flèches  permettent le déplacement gauche-droite, la barre espace de sauter et d'avancer dans les textes. 
+
+## Crédits
+
+- Concept et développement par Aarzawa
+
+- Graphisme
+    
+    - Taureau par Aarzawa
+
+    - Paysage de fond par bevouliin (https://opengameart.org/content/bevouliin-pyramid-free-game-background-for-game-developers)
+
+    - Éléments d'architecture par ACTG (https://actg.itch.io/ancient-egypt-tomb) et KimSsuki (https://kimssuki.itch.io/egypt-enviroment)
+
+    - Prêtres par Spring Spring (https://opengameart.org/content/egyptian-project)
+
+- Musique par Aarzawa
+
 ## Librairies
 
 Apistache a été développé en javascript, à l'aide de la libraire Kaboom.js v3000.0.
