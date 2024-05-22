@@ -195,13 +195,13 @@ const LEVELS = [
 scene("game", ({levelIdx}) => {
 
 
-
   //BACKGROUND
  const BACKGROUND = add([
     sprite("background"),
     fixed(),
     scale(0.75),
   ])
+
 
   //LEVEL SETUP
   const level = addLevel(LEVELS[levelIdx || 0 ], {

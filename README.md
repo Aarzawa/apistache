@@ -35,3 +35,8 @@ Apistache a été développé en javascript, à l'aide de la libraire Kaboom.js 
 ## Lancement
 
 Le jeu tourne bien sur l'extension LiveServer.
+
+## Démo
+
+Une démo est disponible sur itch : https://aarzawa.itch.io/apistache
+Cette démo présente un fonctionnement moins bon qu'en téléchargeant les fichiers originaux.
