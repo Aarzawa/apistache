@@ -49,6 +49,9 @@ loadSprite("block-1", "block-1.png")
 loadSprite("poils", "poils.png")
 loadSprite("triangle", "triangle.png")
 loadSprite("faucon", "faucon.png")
+loadSprite("ankh", "ankh.png")
+loadSprite("scarab", "scarab.png")
+loadSprite("jewel", "jewel.png")
 
 
 const SPEED = 240
@@ -56,6 +59,7 @@ const ENEMYSPEED = 30
 const START_LEVEL_IDX = 0
 let LEVEL_IDX = START_LEVEL_IDX
 let WIN_SCORE = 0
+let BONUS_SCORE = 0
 setGravity(1600)
 const music = play("ost", {
   volume: 0.8,
@@ -66,8 +70,8 @@ const LEVELS = [
   [
     "|                                                                                                                                        |",
     "|                                                                                                                                        |",
-    "|                                                                                                                                        |",
-    "|                                                                                 c         c                                            |",
+    "|                                                                                           S                                            |",
+    "|                                                                                 c    c    c                                            |",
     "|                                                                                                                                        |",
     "|                                                                              c                                                         |",
     "|                                                                                                      *                                 |",
@@ -75,12 +79,12 @@ const LEVELS = [
     "|                                                                        p    CC     V1                                                  |",
     "|                                                                        c           CCCC      ccc                                       |",
     "|                                                                   c                                                                    |",
-    "|                                                                 c                                                                      |",
+    "|                                 0                               c                                                                      |",
     "|                                 c                                                                                                      |",
     "|                                                                                                                                        |",
     "|                           c                               cc    c P 2   Y                                                              |",
     "|                                            c                    CCCCCCCCCCC                                                            |",
-    "|              C           1 V                                                    V                                                      |",
+    "|              C           1 V                                                    VA                                                     |",
     "|                         =====                                                   ===                                                    |",
     "|        C           C                                                                 p                                                 |",
     "|                                                                                      CC      c      c                                   |",
@@ -105,14 +109,14 @@ const LEVELS = [
     "|                                                                                                                                        |",
     "|                                                                                                                                        |",
     "|  T   Pp                                                                                                                                |",
-    "|==========                                                                                                                    P    Pp   |",
+    "|==========                                                                                                                    P  0 Pp   |",
     "|          =                                                                                                            P  B  CCCCCCCCCCC|",
     "|           =V                                                                                                       CCCCCCCCC           |",
     "|            =      V  P                                                                                                                 |",
     "|             ==============                                                                                      c                      |",
     "|                           =                                                             cV1 c             c                            |",
     "|                            =                                                            =====    CC   c                                |",
-    "|                             =  1            p    1         c  V2  P c     c V1 c                                                       |",
+    "|                             =  1            p    1    A    c  V2  P c     c V1 c  S                                                    |",
     "|                              =======   =   =========  ==   ==========  =  ======  C  CC                                                |",
     "|                                                                                                                                        |",
     "|                                    P                                                                                                   |",
@@ -156,7 +160,7 @@ const LEVELS = [
     "|                                                                                        2                                               |",    "|                                                                                                                                        |",
     "|                                                                                       CCC                                              |",
     "|                                                                cp1 c                                                                   |",
-    "|T    V      c             Pc                   C   P         V  =====             VY                               p   2     P B    Y & |",
+    "|T    V      c             Pc          A        C   P        SV  =====             VY                               p   2     P B  0 Y & |",
     "|=   ===                  ===       c  c  c         C       ===                    ===             c    c    c    =======================|",
     "|                    c                                                     P B               c                                           |",
     "|                                                                          =====                                                         |",
@@ -228,10 +232,15 @@ scene("game", ({levelIdx}) => {
       "*": () => [sprite("poils", {height: 16}), area(), body({isStatic: true}), anchor("bot"), "attribute"],
       "^": () => [sprite("triangle", {height: 16}), area(), body({isStatic: true}), anchor("bot"), "attribute"],
       "&": () => [sprite("faucon", {height: 16}), area(), body({isStatic: true}), anchor("bot"), "attribute"],
+      //BONUS
+      "A": () => [sprite("ankh", {height: 16}), area(), body({isStatic: true}), anchor("bot"), "ankh", "bonus"],
+      "S": () => [sprite("scarab", {height: 16}), area(), body({isStatic: true}), anchor("bot"), "scarab", "bonus"],
+      "0": () => [sprite("jewel", {height: 16}), area(), body({isStatic: true}), anchor("bot"), "jewel", "bonus"],
     }
   })
 
 
+  //LABELS
   const levelLabel = add([
 		text(`Niveau ${LEVEL_IDX + 1}`, {font: "courier new", size: 32}),
     color(0, 0, 0),
@@ -240,6 +249,98 @@ scene("game", ({levelIdx}) => {
 		fixed(),
 		z(100),
 	])
+  const bonusLabels = add([
+    rect(240, 70),
+    color(50, 50, 50),
+    outline(4),
+    anchor("center"),
+    pos(width() - 640, 80),
+    fixed(),
+    z(99)
+  ])
+  
+  let bonusOpacity = 0.3
+
+  const ankhLabel = add([
+    sprite("ankh", {height: 48}),
+    anchor("center"),
+    pos(bonusLabels.pos.x - 85, bonusLabels.pos.y),
+    opacity(bonusOpacity),
+    fixed(),
+    z(100) 
+  ])
+  const scarabLabel = add([
+    sprite("scarab", {height: 48}),
+    anchor("center"),
+    pos(bonusLabels.pos.x, bonusLabels.pos.y),
+    opacity(bonusOpacity),
+    fixed(),
+    z(100) 
+  ])
+
+  const jewelLabel = add([
+    sprite("jewel", {height: 48}),
+    anchor("center"),
+    pos(bonusLabels.pos.x + 85, bonusLabels.pos.y),
+    opacity(bonusOpacity),
+    fixed(),
+    z(100) 
+  ])
+
+  const attributeLabels = add([
+    rect(270, 70),
+    color(256, 256, 256),
+    opacity(0.7),
+    outline(4),
+    anchor("center"),
+    pos(width() - 170, 80),
+    fixed(),
+    z(99)
+  ])
+  
+  let attributeOpacity = 0.3
+
+  const poilsLabel = add([
+    sprite("poils", {height: 48}),
+    anchor("center"),
+    pos(attributeLabels.pos.x - 88, attributeLabels.pos.y),
+    opacity(bonusOpacity),
+    fixed(),
+    z(100) 
+  ])
+  const triangleLabel = add([
+    sprite("triangle", {height: 48}),
+    anchor("center"),
+    pos(attributeLabels.pos.x, attributeLabels.pos.y),
+    opacity(bonusOpacity),
+    fixed(),
+    z(100) 
+  ])
+
+  const fauconLabel = add([
+    sprite("faucon", {height: 48}),
+    anchor("center"),
+    pos(attributeLabels.pos.x + 88, attributeLabels.pos.y),
+    opacity(bonusOpacity),
+    fixed(),
+    z(100) 
+  ])
+
+  if (levelIdx == 0){
+    poilsLabel.opacity = attributeOpacity
+    triangleLabel.opacity = attributeOpacity
+    fauconLabel.opacity = attributeOpacity
+  }
+  if (levelIdx == 1){
+    poilsLabel.opacity = 1
+    triangleLabel.opacity = attributeOpacity
+    fauconLabel.opacity = attributeOpacity
+  }
+  if (levelIdx == 2){
+    poilsLabel.opacity = 1
+    triangleLabel.opacity = 1
+    fauconLabel.opacity = attributeOpacity
+  }
 
   //MOUVEMENTS DU JOUEUR ET ANIMATIONS
   const player = level.get("player")[0]
@@ -346,7 +447,8 @@ scene("game", ({levelIdx}) => {
 
     WIN_SCORE += 1
     LEVEL_IDX += 1
-    if (WIN_SCORE === 3) {
+    BONUS_SCORE += CUR_BONUS_SCORE
+    if (LEVEL_IDX === 3) {
       go("end")
     }
     else {
@@ -354,6 +456,120 @@ scene("game", ({levelIdx}) => {
       levelIdx: LEVEL_IDX,
     })
   }
+  })
+
+  //BONUS
+  let CUR_BONUS_SCORE = 0
+  let bonus_texts = {}
+  bonus_texts = {
+    0: {
+      ankh: "Le taureau était associé au pharaon, rappel de son pouvoir et de sa force.\n\n⏎ pour fermer",
+      scarab: "Le culte du taureau Apis est attesté dès le début du 3e millénaire av. J.-C et jusqu’à la période romaine.\n\n⏎ pour fermer",
+      jewel: "Les divinités bovines étaient nombreuses en Égypte antique. Les plus célèbres sont Hathor, déesse de la beauté et de l’amour, représentée en vache, et Apis, symbole de force, de fertilité et de virilité.\n\n⏎ pour fermer",
+    },
+    1: {
+      ankh: "Le taureau Apis était utilisé comme oracle. À certaines occasions particulières, le taureau était amené dans une salle avec de nombreuses portes, derrières lesquels étaient placés différents symboles. La porte que franchissait le taureau à la suite d’une question posée apportait une réponse.\n\n⏎ pour fermer",
+      scarab: "Il n’y avait qu’un seul taureau Apis à la fois. Une fois décédé, on entamait la recherche de son successeur. \n\n⏎ pour fermer",
+      jewel: "Le taureau Apis était logé, avec sa mère, dans l’enceinte du temple de Ptah à Memphis.\n\n⏎ pour fermer",
+    },
+    2: {
+      ankh: "Après 25 ans, le taureau était tué de manière cérémoniale. Certaines parties de la chair étaient mangées par les prêtres, puis la carcasse était embaumée.\n\n⏎ pour fermer",
+      scarab: "Les taureaux Apis étaient momifiés avec le même soin que celui apporté à un roi ou un noble.\n\n⏎ pour fermer",
+      jewel: "Une fois embaumé, le taureau était enterré dans le Sérapéum à la nécropole de Saqqarah, où une série de chambres souterraines étaient creusées pour accueillir les défunts taureaux Apis.\n\n⏎ pour fermer",
+    }
+  }
+
+  console.log(bonus_texts[LEVEL_IDX]["ankh"])
+
+  player.onCollide("ankh", (ankh) => {
+    destroy(ankh)
+    CUR_BONUS_SCORE += 1
+    ankhLabel.opacity = 1
+
+    const txt = add([
+      text(`${bonus_texts[LEVEL_IDX]['ankh']}`, { font: "courier new", size: 24, width: 400 - 60, align: "center", lineSpacing: 8}),
+      pos(220, 390),
+      anchor("center"),
+      color(0, 0, 0),
+      fixed(),
+      z(100),
+      ])
+      const bonusBox = add([
+        rect(txt.width + 40, txt.height + 40),
+        color(255, 255, 255),
+        opacity(0.7),
+        outline(4),
+        anchor("center"),
+        pos(220, 390),
+        fixed(),
+        z(98),
+      ])
+
+      onKeyPress("enter", () => {
+        destroy(txt)
+        destroy(bonusBox)
+      })
+  })
+
+  player.onCollide("scarab", (scarab) => {
+    destroy(scarab)
+    CUR_BONUS_SCORE += 1
+    scarabLabel.opacity = 1
+
+    const txt = add([
+      text(`${bonus_texts[LEVEL_IDX]['scarab']}`, { font: "courier new", size: 24, width: 400 - 60, align: "center", lineSpacing: 18}),
+      pos(220, 390),
+      anchor("center"),
+      color(0, 0, 0),
+      fixed(),
+      z(100),
+      ])
+      const bonusBox = add([
+        rect(txt.width + 40, txt.height + 40),
+        color(255, 255, 255),
+        opacity(0.7),
+        outline(4),
+        anchor("center"),
+        pos(220, 390),
+        fixed(),
+        z(98),
+      ])
+
+      onKeyPress("enter", () => {
+        destroy(txt)
+        destroy(bonusBox)
+      })
+  })
+
+  player.onCollide("jewel", (jewel) => {
+    destroy(jewel)
+    CUR_BONUS_SCORE += 1
+    jewelLabel.opacity = 1
+
+    const txt = add([
+      text(`${bonus_texts[LEVEL_IDX]['jewel']}`, { font: "courier new", size: 24, width: 400 - 60, align: "center", lineSpacing: 18}),
+      //pos(bonusBox.pos),
+      pos(220, 390),
+      anchor("center"),
+      color(0, 0, 0),
+      fixed(),
+      z(100),
+      ])
+      const bonusBox = add([
+        rect(txt.width + 40, txt.height + 40),
+        color(255, 255, 255),
+        opacity(0.7),
+        outline(4),
+        anchor("center"),
+        pos(220, 390),
+        fixed(),
+        z(98),
+      ])
+
+      onKeyPress("enter", () => {
+        destroy(txt)
+        destroy(bonusBox)
+      })
   })
 
 
@@ -388,13 +604,35 @@ scene("start", () => {
 		anchor("center"),
 		pos(center()),
   ])
+  loadShader("invert", null, `
+    uniform float u_time;
+    
+    vec4 frag(vec2 pos, vec2 uv, vec4 color, sampler2D tex) {
+      vec4 c = def_frag();
+      float t = (sin(u_time * 6.0) + 1.0) / 2.0;
+      vec4 transparentColor = vec4(c.rgb, 0.0); // Couleur d'arrivée (opacité 0)
+      return mix(c, transparentColor, t); // Mélange des deux couleurs selon t
+    }
+    `)
+  const spaceInstruction = add([
+    text("<Espace>", { font: "courier new", size: 24, width: startMenu.width - 60, align: "center", lineSpacing: 25 }),
+    pos(startMenu.pos.x + 300, startMenu.pos.y + 220),
+    anchor("center"),
+    color(0, 0, 0),
+    shader("invert", () => ({
+      "u_time": time(),
+    }))
+
+  ])
   const dialogs = [
     ["Égypte, Memphis. 652 avant notre ère..."],
-    ["Vous êtes un taureau et souhaitez poursuivre votre vie dans les meilleures conditions qui soient pour vous :"],
-    ["Vous souhaitez devenir un taureau Apis, incarnation terrestre du dieu Ptah !"],
+    ["Vous êtes un taureau et souhaitez saisir la chance de poursuivre votre vie dans les meilleures conditions qui soient pour vous :"],
+    ["Le précédent taureau Apis, incarnation terrestre du dieu Ptah, vient de mourir et vous souhaitez lui succéder !"],
     ["Vous pourriez ainsi terminer votre vie dans les plus grands honneurs, aux soins des prêtres..."],
-    ["Pour cela, il vous faut récupérer les attributs caractéristiques des taureaux Apis : \n- les poils noirs \n- le triangle blanc sur le front\n- la marque de faucon sur le dos"],
-    ["Avant d'avoir réuni ces attributs, ne vous faites pas attraper par les prêtres !"]
+    ["Pour cela, il vous faut récupérer les attributs caractéristiques des taureaux Apis :"],
+    ["les poils noirs \n\nle triangle blanc sur le front\n\nla marque de faucon sur le dos"],
+    ["Dans chaque niveau se cachent 3 objets de valeur qui vous apporterons un prestige supplémentaire... Récupérez les pour augmentez votre score !\n"],
+    ["Avant d'avoir réuni tous ces objets, ne vous faites pas attraper par les prêtres !"],
   ]
   let curDialog = 0
   const txt = add([
@@ -420,7 +658,67 @@ scene("start", () => {
     const [ dialog ] = dialogs[curDialog]
     // Update the dialog text
     txt.text = dialog
-  
+
+    if(curDialog === 5) {
+      let poils = add([
+        sprite("poils", {height: 48}),
+        anchor("center"),
+        pos(startMenu.pos.x, startMenu.pos.y - 64),
+        fixed(),
+        z(100),
+        "label" 
+      ])
+      let triangle = add([
+        sprite("triangle", {height: 48}),
+        anchor("center"),
+        pos(startMenu.pos.x, startMenu.pos.y + 64),
+        fixed(),
+        z(100),
+        "label" 
+      ])
+    
+      let faucon = add([
+        sprite("faucon", {height: 48}),
+        anchor("center"),
+        pos(startMenu.pos.x, startMenu.pos.y + 172),
+        fixed(),
+        z(100),
+        "label"
+      ])
+    }
+    if (curDialog === 6) {
+      destroyAll("label")
+    }
+    if(curDialog === 6) {
+      let ankh = add([
+        sprite("ankh", {height: 48}),
+        anchor("center"),
+        pos(startMenu.pos.x - 110, startMenu.pos.y + 180),
+        fixed(),
+        z(100),
+        "label" 
+      ])
+      let scarab = add([
+        sprite("scarab", {height: 48}),
+        anchor("center"),
+        pos(startMenu.pos.x, startMenu.pos.y + 180),
+        fixed(),
+        z(100),
+        "label" 
+      ])
+    
+      let jewel = add([
+        sprite("jewel", {height: 48}),
+        anchor("center"),
+        pos(startMenu.pos.x + 110, startMenu.pos.y + 180),
+        fixed(),
+        z(100),
+        "label"
+      ])
+    }
+    if (curDialog > 6) {
+      destroyAll("label")
+    }
   }
   
   updateDialog()
@@ -441,7 +739,7 @@ scene("end", () => {
 		pos(center()),
   ])
   const txt = add([
-    text("Vous êtes désormais un taureau Apis, honoré par toute l'Égypte !", { font: "courier new", size: 32, width: endMenu.width - 60, align: "center", lineSpacing: 25 }),
+    text(`Vous êtes désormais un taureau Apis, honoré par toute l'Égypte !\n\n\nBonus récupérés : ${BONUS_SCORE}`, { font: "courier new", size: 32, width: endMenu.width - 60, align: "center", lineSpacing: 25 }),
     pos(endMenu.pos),
     anchor("center"),
     color(0, 0, 0),
