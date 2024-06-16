@@ -6,7 +6,7 @@ Apistache est un jeu vidéo 2D à visée de médiation scientifique. Ce projet a
 
 Égypte, Memphis. 652 avant notre ère... Vous êtes un taureau et souhaitez poursuivre votre vie dans les meilleures conditions qui soient pour vous : vous souhaitez devenir un taureau Apis, incarnation terrestre du dieu Ptah ! Vous pourriez ainsi terminer votre vie dans les plus grands honneurs, aux soins des prêtres... Pour cela, il vous faut récupérer les attributs caractéristiques des taureaux Apis. Avant d'avoir réuni ces attributs, ne vous faites pas attraper par les prêtres, ou vous finirez sacrifié !
 
-![Capture d'écran du premier niveau](apistache_screenshot.png)
+![Capture d'écran du premier niveau](apistache_screenshot3.png)
 
 ### Commandes
 
