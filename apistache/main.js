@@ -481,12 +481,20 @@ scene("game", ({levelIdx}) => {
 
   console.log(bonus_texts[LEVEL_IDX]["ankh"])
 
+  let bonusBox;
+  let bonusTxt;
+
   player.onCollide("ankh", (ankh) => {
     destroy(ankh)
     CUR_BONUS_SCORE += 1
     ankhLabel.opacity = 1
 
-    const txt = add([
+    if (bonusBox){
+      destroy(bonusBox)
+      destroy(bonusTxt)
+    }
+
+    bonusTxt = add([
       text(`${bonus_texts[LEVEL_IDX]['ankh']}`, { font: "courier new", size: 24, width: 400 - 60, align: "center", lineSpacing: 8}),
       pos(220, 390),
       anchor("center"),
@@ -494,8 +502,8 @@ scene("game", ({levelIdx}) => {
       fixed(),
       z(100),
       ])
-      const bonusBox = add([
-        rect(txt.width + 40, txt.height + 40),
+    bonusBox = add([
+        rect(bonusTxt.width + 40, bonusTxt.height + 40),
         color(255, 255, 255),
         opacity(0.7),
         outline(4),
@@ -505,8 +513,8 @@ scene("game", ({levelIdx}) => {
         z(98),
       ])
 
-      onKeyPress("enter", () => {
-        destroy(txt)
+    onKeyPress("enter", () => {
+        destroy(bonusTxt)
         destroy(bonusBox)
       })
   })
@@ -516,7 +524,12 @@ scene("game", ({levelIdx}) => {
     CUR_BONUS_SCORE += 1
     scarabLabel.opacity = 1
 
-    const txt = add([
+    if (bonusBox){
+      destroy(bonusBox)
+      destroy(bonusTxt)
+    }
+
+    bonusTxt = add([
       text(`${bonus_texts[LEVEL_IDX]['scarab']}`, { font: "courier new", size: 24, width: 400 - 60, align: "center", lineSpacing: 18}),
       pos(220, 390),
       anchor("center"),
@@ -524,8 +537,8 @@ scene("game", ({levelIdx}) => {
       fixed(),
       z(100),
       ])
-      const bonusBox = add([
-        rect(txt.width + 40, txt.height + 40),
+    bonusBox = add([
+        rect(bonusTxt.width + 40, bonusTxt.height + 40),
         color(255, 255, 255),
         opacity(0.7),
         outline(4),
@@ -535,8 +548,8 @@ scene("game", ({levelIdx}) => {
         z(98),
       ])
 
-      onKeyPress("enter", () => {
-        destroy(txt)
+    onKeyPress("enter", () => {
+        destroy(bonusTxt)
         destroy(bonusBox)
       })
   })
@@ -546,7 +559,12 @@ scene("game", ({levelIdx}) => {
     CUR_BONUS_SCORE += 1
     jewelLabel.opacity = 1
 
-    const txt = add([
+    if (bonusBox){
+      destroy(bonusBox)
+      destroy(bonusTxt)
+    }
+
+    bonusTxt = add([
       text(`${bonus_texts[LEVEL_IDX]['jewel']}`, { font: "courier new", size: 24, width: 400 - 60, align: "center", lineSpacing: 18}),
       //pos(bonusBox.pos),
       pos(220, 390),
@@ -555,8 +573,8 @@ scene("game", ({levelIdx}) => {
       fixed(),
       z(100),
       ])
-      const bonusBox = add([
-        rect(txt.width + 40, txt.height + 40),
+    bonusBox = add([
+        rect(bonusTxt.width + 40, bonusTxt.height + 40),
         color(255, 255, 255),
         opacity(0.7),
         outline(4),
@@ -566,8 +584,8 @@ scene("game", ({levelIdx}) => {
         z(98),
       ])
 
-      onKeyPress("enter", () => {
-        destroy(txt)
+    onKeyPress("enter", () => {
+        destroy(bonusTxt)
         destroy(bonusBox)
       })
   })
