@@ -196,9 +196,21 @@ const LEVELS = [
   ],*/
 ]
 
+let ankh0 = false
+let ankh1 = false
+let ankh2 = false
+
+let scarab0 = false
+let scarab1 = false
+let scarab2 = false
+
+let jewel0 = false
+let jewel1 = false
+let jewel2 = false
+
+
 scene("game", ({levelIdx}) => {
-
-
+  
   //BACKGROUND
  const BACKGROUND = add([
     sprite("background"),
@@ -249,6 +261,7 @@ scene("game", ({levelIdx}) => {
 		fixed(),
 		z(100),
 	])
+
   const bonusLabels = add([
     rect(240, 70),
     color(50, 50, 50),
@@ -459,8 +472,10 @@ scene("game", ({levelIdx}) => {
   })
 
   //BONUS
+
   let CUR_BONUS_SCORE = 0
   let bonus_texts = {}
+
   bonus_texts = {
     0: {
       ankh: "Le taureau était associé au pharaon, rappel de son pouvoir et de sa force.\n\n⏎ pour fermer",
@@ -484,10 +499,33 @@ scene("game", ({levelIdx}) => {
   let bonusBox;
   let bonusTxt;
 
+  if(levelIdx === 0 && ankh0 === true){
+    CUR_BONUS_SCORE += 1
+    ankhLabel.opacity = 1
+  }
+  if(levelIdx === 1 && ankh1 === true){
+    CUR_BONUS_SCORE += 1
+    ankhLabel.opacity = 1
+  }
+  if(levelIdx === 2 && ankh2 === true){
+    CUR_BONUS_SCORE += 1
+    ankhLabel.opacity = 1
+  }
+  
+
   player.onCollide("ankh", (ankh) => {
     destroy(ankh)
     CUR_BONUS_SCORE += 1
     ankhLabel.opacity = 1
+    if(levelIdx == 0){
+      ankh0 = true
+    }
+    if(levelIdx == 1){
+      ankh1 = true
+    }
+    if(levelIdx == 2){
+      ankh2 = true
+    }
 
     if (bonusBox){
       destroy(bonusBox)
@@ -519,10 +557,33 @@ scene("game", ({levelIdx}) => {
       })
   })
 
+  if(levelIdx === 0 && scarab0 === true){
+    CUR_BONUS_SCORE += 1
+    scarabLabel.opacity = 1
+  }
+  if(levelIdx === 1 && scarab1 === true){
+    CUR_BONUS_SCORE += 1
+    scarabLabel.opacity = 1
+  }
+  if(levelIdx === 2 && scarab2 === true){
+    CUR_BONUS_SCORE += 1
+    scarabLabel.opacity = 1
+  }
+
   player.onCollide("scarab", (scarab) => {
     destroy(scarab)
     CUR_BONUS_SCORE += 1
     scarabLabel.opacity = 1
+
+    if(levelIdx == 0){
+      scarab0 = true
+    }
+    if(levelIdx == 1){
+      scarab1 = true
+    }
+    if(levelIdx == 2){
+      scarab2 = true
+    }
 
     if (bonusBox){
       destroy(bonusBox)
@@ -554,10 +615,32 @@ scene("game", ({levelIdx}) => {
       })
   })
 
+  if(levelIdx === 0 && jewel0 === true){
+    CUR_BONUS_SCORE += 1
+    jewelLabel.opacity = 1
+  }
+  if(levelIdx === 1 && jewel1 === true){
+    CUR_BONUS_SCORE += 1
+    jewelLabel.opacity = 1
+  }
+  if(levelIdx === 2 && jewel2 === true){
+    CUR_BONUS_SCORE += 1
+    jewelLabel.opacity = 1
+  }
+
   player.onCollide("jewel", (jewel) => {
     destroy(jewel)
     CUR_BONUS_SCORE += 1
     jewelLabel.opacity = 1
+    if(levelIdx == 0){
+      jewel0 = true
+    }
+    if(levelIdx == 1){
+      jewel1 = true
+    }
+    if(levelIdx == 2){
+      jewel2 = true
+    }
 
     if (bonusBox){
       destroy(bonusBox)
@@ -649,7 +732,7 @@ scene("start", () => {
     ["Vous pourriez ainsi terminer votre vie dans les plus grands honneurs, aux soins des prêtres..."],
     ["Pour cela, il vous faut récupérer les attributs caractéristiques des taureaux Apis :"],
     ["les poils noirs \n\nle triangle blanc sur le front\n\nla marque de faucon sur le dos"],
-    ["Dans chaque niveau se cachent 3 objets de valeur qui vous apporterons un prestige supplémentaire... Récupérez les pour augmentez votre score !\n"],
+    ["Dans chaque niveau se cachent 3 objets de valeur qui vous apporteront un prestige supplémentaire... Récupérez-les pour augmenter votre score !\n"],
     ["Avant d'avoir réuni tous ces objets, ne vous faites pas attraper par les prêtres !"],
   ]
   let curDialog = 0
